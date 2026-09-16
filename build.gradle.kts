@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.20"
+    application
 }
 
 group = "org.kvxd"
@@ -9,7 +10,36 @@ repositories {
     mavenCentral()
 }
 
+val skikoVersion = "0.150.1"
+val lwjglVersion = "3.4.3"
+
+val hostOs = System.getProperty("os.name").let { name ->
+    when {
+        name.startsWith("Linux") -> "linux"
+        name.startsWith("Mac") -> "macos"
+        name.startsWith("Windows") -> "windows"
+        else -> error("Unsupported operating system: $name")
+    }
+}
+val hostArch = System.getProperty("os.arch").let { arch ->
+    when (arch) {
+        "x86_64", "amd64" -> "x64"
+        "aarch64", "arm64" -> "arm64"
+        else -> error("Unsupported architecture: $arch")
+    }
+}
+val lwjglNatives = "natives-$hostOs${if (hostArch == "arm64") "-arm64" else ""}"
+
 dependencies {
+    implementation("org.jetbrains.skiko:skiko-awt-runtime-$hostOs-$hostArch:$skikoVersion")
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    implementation("org.lwjgl:lwjgl")
+    implementation("org.lwjgl:lwjgl-glfw")
+    implementation("org.lwjgl:lwjgl-opengl")
+    runtimeOnly("org.lwjgl:lwjgl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
+
     testImplementation(kotlin("test"))
 }
 
@@ -19,4 +49,18 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+application {
+    mainClass = "org.kvxd.keno.demo.MainKt"
+    applicationDefaultJvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.register<JavaExec>("runWolframAlphaExample") {
+    group = "application"
+    description = "Renders the comprehensive How Wolfram|Alpha Works example"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "org.kvxd.keno.examples.wolframalpha.MainKt"
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }

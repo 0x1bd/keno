@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.20"
-    application
+    `java-library`
 }
 
 group = "org.kvxd"
@@ -31,7 +31,7 @@ val hostArch = System.getProperty("os.arch").let { arch ->
 val lwjglNatives = "natives-$hostOs${if (hostArch == "arm64") "-arm64" else ""}"
 
 dependencies {
-    implementation("org.jetbrains.skiko:skiko-awt-runtime-$hostOs-$hostArch:$skikoVersion")
+    api("org.jetbrains.skiko:skiko-awt-runtime-$hostOs-$hostArch:$skikoVersion")
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-glfw")
@@ -49,18 +49,5 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
-    jvmArgs("--enable-native-access=ALL-UNNAMED")
-}
-
-application {
-    mainClass = "org.kvxd.keno.demo.MainKt"
-    applicationDefaultJvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
-}
-
-tasks.register<JavaExec>("runWolframAlphaExample") {
-    group = "application"
-    description = "Renders the comprehensive How Wolfram|Alpha Works example"
-    classpath = sourceSets.main.get().runtimeClasspath
-    mainClass = "org.kvxd.keno.examples.wolframalpha.MainKt"
     jvmArgs("--enable-native-access=ALL-UNNAMED")
 }

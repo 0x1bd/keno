@@ -35,7 +35,7 @@ class OpenGlSkiaRenderer(
         ensureUsable()
         glfwMakeContextCurrent(resources.window)
         glBindFramebuffer(GL_FRAMEBUFFER, resources.framebuffer)
-        resources.surface.canvas.drawScene(scene, frame)
+        resources.surface.canvas.drawScene(scene, frame, size)
         resources.surface.flushAndSubmit()
         glPixels.clear()
         glReadPixels(0, 0, size.width, size.height, GL_RGBA, GL_UNSIGNED_BYTE, glPixels)

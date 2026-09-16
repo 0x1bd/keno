@@ -14,6 +14,13 @@ import kotlin.time.measureTime
 object Keno {
     fun render(
         scene: Scene,
+        output: String,
+        settings: RenderSettings = RenderSettings(),
+        onProgress: (RenderProgress) -> Unit = {},
+    ): RenderReport = render(scene, Path.of(output), settings, onProgress)
+
+    fun render(
+        scene: Scene,
         output: Path,
         settings: RenderSettings = RenderSettings(),
         onProgress: (RenderProgress) -> Unit = {},
@@ -57,6 +64,8 @@ object Keno {
     }
 
     private fun createRenderer(settings: RenderSettings): FrameRenderer = when (settings.backend) {
+        RenderBackend.AUTO -> runCatching { OpenGlSkiaRenderer(settings.size) }
+            .getOrElse { SkiaRasterRenderer(settings.size) }
         RenderBackend.GPU_OPENGL -> OpenGlSkiaRenderer(settings.size)
         RenderBackend.RASTER -> SkiaRasterRenderer(settings.size)
     }

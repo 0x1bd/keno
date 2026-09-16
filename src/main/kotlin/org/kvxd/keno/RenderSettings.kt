@@ -8,7 +8,7 @@ import org.kvxd.keno.time.FrameRate
 data class RenderSettings(
     val size: CanvasSize = CanvasSize(1920, 1080),
     val frameRate: FrameRate = FrameRate(60),
-    val backend: RenderBackend = RenderBackend.GPU_OPENGL,
+    val backend: RenderBackend = RenderBackend.AUTO,
     val codec: FfmpegCodec = FfmpegCodec.AUTO,
     val ffmpegExecutable: String = "ffmpeg",
     val overwrite: Boolean = false,

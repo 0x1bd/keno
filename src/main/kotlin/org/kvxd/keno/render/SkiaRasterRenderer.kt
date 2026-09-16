@@ -28,7 +28,7 @@ class SkiaRasterRenderer(
 
     override fun render(scene: Scene, frame: FrameContext): ByteBuffer {
         check(!closed) { "Renderer is closed" }
-        surface.canvas.drawScene(scene, frame)
+        surface.canvas.drawScene(scene, frame, size)
         surface.flushAndSubmit()
         return pixels.clear().limit(size.frameBytes)
     }

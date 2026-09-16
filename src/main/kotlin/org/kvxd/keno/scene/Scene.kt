@@ -8,6 +8,9 @@ import kotlin.time.Duration
 interface Scene {
     val duration: Duration
 
+    val viewport: Viewport
+        get() = Viewport.Widescreen
+
     val backgroundColor: Int
         get() = Color.BLACK
 

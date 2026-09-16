@@ -8,6 +8,5 @@ interface FrameRenderer : AutoCloseable {
     val size: CanvasSize
     val backendName: String
 
-    /** Returns a renderer-owned RGBA buffer valid until the next call to [render]. */
     fun render(scene: Scene, frame: FrameContext): ByteBuffer
 }

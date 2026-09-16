@@ -6,6 +6,7 @@ import kotlin.time.Duration
 
 class TimelineScene internal constructor(
     override val duration: Duration,
+    override val viewport: Viewport,
     override val backgroundColor: Int,
     private val clips: List<Clip>,
 ) : Scene {

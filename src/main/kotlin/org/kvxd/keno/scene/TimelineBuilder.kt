@@ -6,6 +6,7 @@ import kotlin.time.Duration
 class TimelineBuilder internal constructor(
     private val duration: Duration,
     private val backgroundColor: Int,
+    private val viewport: Viewport,
 ) {
     private val clips = mutableListOf<Clip>()
 
@@ -25,6 +26,7 @@ class TimelineBuilder internal constructor(
     internal fun build(): TimelineScene =
         TimelineScene(
             duration = duration,
+            viewport = viewport,
             backgroundColor = backgroundColor,
             clips = clips.sortedWith(compareBy(Clip::zIndex, Clip::insertionOrder)),
         )
@@ -33,8 +35,9 @@ class TimelineBuilder internal constructor(
 fun timeline(
     duration: Duration,
     backgroundColor: Int = Color.BLACK,
+    viewport: Viewport = Viewport.Widescreen,
     configure: TimelineBuilder.() -> Unit,
 ): TimelineScene {
     require(duration.isFinite() && duration.isPositive()) { "Scene duration must be finite and positive" }
-    return TimelineBuilder(duration, backgroundColor).apply(configure).build()
+    return TimelineBuilder(duration, backgroundColor, viewport).apply(configure).build()
 }
